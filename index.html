@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- Подключение стилей highlight.js "atom-one-dark" -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/atom-one-dark.min.css">
+<!--    <link rel="stylesheet" href="styles/atom-one-dark.css">-->
+    <!-- Подключение скрипта highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
+<!--    <script src="highlight.min.js"></script>-->
+    <style>
+        /* Стили для блока кода */
+        pre {
+            display: flex;
+            justify-content: center;
+            /*border-radius: 10px;*/
+            background-color: #eeeeee;
+            padding: 20px;
+            /*border: 2px solid #a7adba;*/
+            overflow: auto;
+        }
+
+        code {
+            border-radius: 10px;
+            background-color: #282c34;
+            padding: 20px;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <select id="languageSelect">
+        <option value="xml">html</option>
+        <option value="javascript">JavaScript</option>
+        <option value="css">css</option >
+        <!-- Добавьте другие языки по вашему выбору -->
+    </select>
+    <textarea id="inputCode" placeholder="Введите текст здесь"></textarea>
+    <button onclick="convertToHTML()">Преобразовать и подсветить</button>
+</div>
+<pre><code id="outputCode" class="language-html"></code></pre>
+
+<script>
+    function convertToHTML() {
+        const userInput = document.getElementById('inputCode').value;
+        const codeBlock = document.getElementById('outputCode');
+        const selectedLanguage = document.getElementById('languageSelect').value;
+
+        codeBlock.textContent = userInput   ;
+        codeBlock.className = `language-${selectedLanguage}`;
+
+        hljs.highlightBlock(codeBlock); // Подсветить блок
+        hljs.initHighlightingOnLoad(); // Перезагрузка подсветки
+    }
+
+    function escapeHTML(text) {
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+</script>
+</body>
+</html>
