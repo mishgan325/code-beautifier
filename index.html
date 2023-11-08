@@ -2,18 +2,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <!-- Подключение стилей highlight.js "atom-one-dark" -->
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/atom-one-dark.min.css">
-<!--    <link rel="stylesheet" href="styles/atom-one-dark.css">-->
-    <!-- Подключение скрипта highlight.js -->
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
-<!--    <script src="highlight.min.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.1/html2canvas.min.js"></script>
     <style>
         /* Стили для блока кода */
         pre {
             display: flex;
             justify-content: center;
-            /*border-radius: 10px;*/
             background-color: #eeeeee;
             padding: 20px;
             /*border: 2px solid #a7adba;*/
@@ -40,7 +38,12 @@
     <textarea id="inputCode" placeholder="Введите текст здесь"></textarea>
     <button onclick="convertToHTML()">Преобразовать и подсветить</button>
 </div>
-<pre><code id="outputCode" class="language-html"></code></pre>
+<pre id="screenshot"><code id="outputCode" class="language-html"></code></pre>
+
+<button id="screenshotButton">Скачать скриншот</button>
+<button id="screenshotBuffer">Скопировать</button>
+
+<canvas style="display: none;" id="canvas"></canvas>
 
 <script>
     function convertToHTML() {
@@ -48,21 +51,43 @@
         const codeBlock = document.getElementById('outputCode');
         const selectedLanguage = document.getElementById('languageSelect').value;
 
-        codeBlock.textContent = userInput   ;
+        codeBlock.textContent = userInput;
         codeBlock.className = `language-${selectedLanguage}`;
 
         hljs.highlightBlock(codeBlock); // Подсветить блок
         hljs.initHighlightingOnLoad(); // Перезагрузка подсветки
     }
 
-    function escapeHTML(text) {
-        return text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
+    document.getElementById('screenshotButton').addEventListener('click', function() {
+        html2canvas(document.getElementById('outputCode')).then(function(canvas) {
+            // Преобразование canvas в изображение
+            var imgData = canvas.toDataURL('image/png');
+
+            // Создание ссылки для скачивания
+            var downloadLink = document.createElement('a');
+            downloadLink.href = imgData;
+            downloadLink.download = 'screenshot.png';
+
+            // Добавление ссылки на страницу и эмуляция клика
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        });
+    });
+
+    document.getElementById('screenshotBuffer').addEventListener('click', function() {
+        html2canvas(document.getElementById('outputCode')).then(function(canvas) {
+            canvas.toBlob(function(blob) {
+                navigator.clipboard.write([new ClipboardItem({'image/png': blob})])
+                    .then(() => {
+                        console.log('Скриншот добавлен в буфер обмена');
+                    })
+                    .catch(err => {
+                        console.error('Не удалось добавить скриншот в буфер обмена:', err);
+                    });
+            }, 'image/png');
+        });
+    });
 </script>
 </body>
 </html>
