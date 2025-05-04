@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/atom-one-light.min.css">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/styles/atom-one-dark.min.css">-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.7.2/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.1/html2canvas.min.js"></script>
@@ -11,14 +12,23 @@
         pre {
             display: flex;
             justify-content: center;
-            background-color: #eeeeee;
+            /*background-color: #eeeeee;*/
             padding: 20px;
             overflow: auto;
         }
 
-        code {
+        .black {
             border-radius: 10px;
             background-color: #282c34;
+            padding: 20px;
+            font-size: 16px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .white {
+            border-radius: 10px;
+            border: solid 1px #262931;
+            background-color: #ffffff;
             padding: 20px;
             font-size: 16px;
             font-family: 'Courier New', Courier, monospace;
@@ -46,8 +56,13 @@
         <option value="xml">html</option>
         <option value="javascript">JavaScript</option>
         <option value="css">css</option >
+        <option value="java">Java</option>
     </select>
     <textarea id="inputCode" placeholder="Введите текст здесь"></textarea>
+    <select id="themeSelect">
+<!--        <option value="black">black</option>-->
+        <option value="white">white</option>
+    </select>
     <button onclick="convertToHTML()">Сделать листинг</button>
 </div>
 <pre id="screenshot"><code id="outputCode" class="language-html"></code></pre>
@@ -62,9 +77,10 @@
         const userInput = document.getElementById('inputCode').value;
         const codeBlock = document.getElementById('outputCode');
         const selectedLanguage = document.getElementById('languageSelect').value;
+        const selectedTheme = document.getElementById('themeSelect').value;
 
         codeBlock.textContent = userInput;
-        codeBlock.className = `language-${selectedLanguage}`;
+        codeBlock.className = `language-${selectedLanguage} ${selectedTheme}`;
 
         hljs.highlightBlock(codeBlock); // Подсветить блок
         hljs.initHighlightingOnLoad(); // Перезагрузка подсветки
